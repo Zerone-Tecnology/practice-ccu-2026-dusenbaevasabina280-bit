@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Digital Future 2026 — Хакатон</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* ── TOKENS ─────────────────────────────────────────── */
+    :root {
+      --bg:        #080c14;
+      --surface:   #0f1622;
+      --border:    #1e2d45;
+      --accent:    #3d8bff;
+      --accent2:   #a259ff;
+      --text:      #e8edf5;
+      --muted:     #7a8aa0;
+      --card:      #111927;
+
+      --font-head: 'Space Grotesk', sans-serif;
+      --font-body: 'Inter', sans-serif;
+
+      --r: 12px;
+      --gap: clamp(1.5rem, 4vw, 3rem);
+    }
+
+    /* ── RESET ──────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      line-height: 1.65;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+
+    /* ── UTILITY ────────────────────────────────────────── */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 clamp(1rem, 5vw, 2rem);
+    }
+    .tag {
+      display: inline-block;
+      font-size: .75rem;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: .75rem;
+    }
+    .btn {
+      display: inline-block;
+      padding: .75rem 1.75rem;
+      border-radius: 999px;
+      font-family: var(--font-head);
+      font-weight: 600;
+      font-size: .95rem;
+      cursor: pointer;
+      border: none;
+      transition: transform .2s, box-shadow .2s, background .2s;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(61,139,255,.35);
+    }
+    .btn-outline {
+      background: transparent;
+      border: 1.5px solid var(--border);
+      color: var(--text);
+    }
+    .btn-outline:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    /* ── HEADER ─────────────────────────────────────────── */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(8,12,20,.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1rem clamp(1rem, 5vw, 2rem);
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .logo {
+      font-family: var(--font-head);
+      font-weight: 700;
+      font-size: 1.15rem;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      white-space: nowrap;
+    }
+    nav { display: flex; align-items: center; gap: 2rem; }
+    nav a {
+      font-size: .9rem;
+      color: var(--muted);
+      font-weight: 500;
+      transition: color .2s;
+    }
+    nav a:hover { color: var(--text); }
+    .nav-links { display: flex; gap: 1.75rem; }
+
+    /* ── HERO ────────────────────────────────────────────── */
+    #hero {
+      min-height: 92vh;
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+    /* ambient glow */
+    #hero::before {
+      content: '';
+      position: absolute;
+      top: -200px; left: 50%;
+      transform: translateX(-50%);
+      width: 800px; height: 600px;
+      background: radial-gradient(ellipse at center,
+        rgba(61,139,255,.18) 0%,
+        rgba(162,89,255,.1) 45%,
+        transparent 70%);
+      pointer-events: none;
+    }
+    .hero-content {
+      position: relative;
+      text-align: center;
+      padding: 5rem 0;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      background: rgba(61,139,255,.1);
+      border: 1px solid rgba(61,139,255,.3);
+      border-radius: 999px;
+      padding: .35rem 1rem;
+      font-size: .8rem;
+      font-weight: 600;
+      color: var(--accent);
+      letter-spacing: .06em;
+      margin-bottom: 1.75rem;
+    }
+    h1 {
+      font-family: var(--font-head);
+      font-size: clamp(2.5rem, 7vw, 5.5rem);
+      font-weight: 700;
+      line-height: 1.08;
+      margin-bottom: 1.5rem;
+    }
+    h1 span {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-sub {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      color: var(--muted);
+      max-width: 560px;
+      margin: 0 auto 1rem;
+    }
+    .hero-meta {
+      font-size: .9rem;
+      color: var(--muted);
+      margin-bottom: 2.5rem;
+    }
+    .hero-meta strong { color: var(--text); }
+    .hero-cta { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+    /* ── SECTION BASE ───────────────────────────────────── */
+    section { padding: clamp(4rem, 8vw, 7rem) 0; }
+    h2 {
+      font-family: var(--font-head);
+      font-size: clamp(1.75rem, 4vw, 2.75rem);
+      font-weight: 700;
+      line-height: 1.15;
+      margin-bottom: 1rem;
+    }
+
+    /* ── ABOUT ───────────────────────────────────────────── */
+    #about { border-top: 1px solid var(--border); }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--gap);
+      align-items: center;
+    }
+    .about-text p { color: var(--muted); line-height: 1.8; margin-bottom: 1rem; }
+    .about-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    .stat-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 1.5rem;
+      text-align: center;
+    }
+    .stat-card .num {
+      font-family: var(--font-head);
+      font-size: 2.25rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .stat-card .label { font-size: .85rem; color: var(--muted); margin-top: .25rem; }
+
+    /* ── TRACKS ──────────────────────────────────────────── */
+    #tracks { border-top: 1px solid var(--border); }
+    .tracks-header { text-align: center; margin-bottom: 3rem; }
+    .tracks-header p { color: var(--muted); max-width: 520px; margin: .5rem auto 0; }
+    .tracks-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+    .track-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 2rem 1.75rem;
+      transition: border-color .25s, transform .25s, box-shadow .25s;
+      position: relative;
+      overflow: hidden;
+    }
+    .track-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      opacity: 0;
+      transition: opacity .25s;
+    }
+    .track-card:hover {
+      border-color: rgba(61,139,255,.4);
+      transform: translateY(-4px);
+      box-shadow: 0 16px 40px rgba(0,0,0,.4);
+    }
+    .track-card:hover::before { opacity: 1; }
+    .track-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+    .track-card h3 {
+      font-family: var(--font-head);
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: .5rem;
+    }
+    .track-card p { font-size: .9rem; color: var(--muted); }
+    .track-tag {
+      display: inline-block;
+      margin-top: 1rem;
+      padding: .25rem .75rem;
+      background: rgba(61,139,255,.1);
+      border: 1px solid rgba(61,139,255,.2);
+      border-radius: 999px;
+      font-size: .75rem;
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    /* ── REGISTRATION ────────────────────────────────────── */
+    #registration { border-top: 1px solid var(--border); }
+    .reg-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1.3fr;
+      gap: var(--gap);
+      align-items: start;
+    }
+    .reg-info h2 { margin-bottom: .75rem; }
+    .reg-info p { color: var(--muted); margin-bottom: 1.5rem; }
+    .reg-steps { list-style: none; }
+    .reg-steps li {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      margin-bottom: 1.25rem;
+      color: var(--muted);
+      font-size: .9rem;
+    }
+    .step-num {
+      min-width: 28px; height: 28px;
+      border-radius: 50%;
+      background: rgba(61,139,255,.15);
+      border: 1px solid rgba(61,139,255,.3);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-head);
+      font-size: .8rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    .form-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 2rem;
+    }
+    .form-card h3 {
+      font-family: var(--font-head);
+      font-weight: 700;
+      font-size: 1.2rem;
+      margin-bottom: 1.5rem;
+    }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .field { display: flex; flex-direction: column; gap: .4rem; margin-bottom: 1rem; }
+    .field label { font-size: .82rem; font-weight: 500; color: var(--muted); }
+    .field input,
+    .field select {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: .7rem 1rem;
+      color: var(--text);
+      font-size: .9rem;
+      font-family: var(--font-body);
+      outline: none;
+      transition: border-color .2s;
+      width: 100%;
+    }
+    .field input:focus,
+    .field select:focus { border-color: var(--accent); }
+    .field select option { background: var(--surface); }
+    .submit-btn {
+      width: 100%;
+      padding: .9rem;
+      margin-top: .5rem;
+      border-radius: var(--r);
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff;
+      font-family: var(--font-head);
+      font-weight: 700;
+      font-size: 1rem;
+      border: none;
+      cursor: pointer;
+      transition: opacity .2s, transform .2s;
+    }
+    .submit-btn:hover { opacity: .88; transform: translateY(-2px); }
+
+    /* ── FOOTER ──────────────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 3rem 0 2rem;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 3rem;
+      margin-bottom: 2.5rem;
+    }
+    .footer-brand .logo { font-size: 1.1rem; margin-bottom: .75rem; display: block; }
+    .footer-brand p { font-size: .875rem; color: var(--muted); max-width: 280px; }
+    .footer-col h4 {
+      font-family: var(--font-head);
+      font-size: .85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--muted);
+      margin-bottom: 1rem;
+    }
+    .footer-col a {
+      display: block;
+      font-size: .875rem;
+      color: var(--muted);
+      margin-bottom: .6rem;
+      transition: color .2s;
+    }
+    .footer-col a:hover { color: var(--text); }
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid var(--border);
+      padding-top: 1.5rem;
+      flex-wrap: wrap;
+      gap: .75rem;
+    }
+    .footer-bottom p { font-size: .8rem; color: var(--muted); }
+    .socials { display: flex; gap: 1rem; }
+    .socials a {
+      width: 38px; height: 38px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: .85rem;
+      color: var(--muted);
+      transition: border-color .2s, color .2s;
+    }
+    .socials a:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* ── RESPONSIVE ──────────────────────────────────────── */
+    @media (max-width: 900px) {
+      .tracks-grid { grid-template-columns: 1fr 1fr; }
+      .about-grid { grid-template-columns: 1fr; }
+      .reg-wrap { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 640px) {
+      .nav-links { display: none; }
+      .tracks-grid { grid-template-columns: 1fr; }
+      .about-stats { grid-template-columns: 1fr 1fr; }
+      .form-row { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .footer-bottom { flex-direction: column; align-items: flex-start; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition: none !important; animation: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-inner">
+      <a href="#" class="logo">⚡ Digital Future</a>
+      <nav>
+        <div class="nav-links">
+          <a href="#about">О событии</a>
+          <a href="#tracks">Направления</a>
+          <a href="#registration">Регистрация</a>
+        </div>
+        <a href="#registration" class="btn btn-primary">Принять участие</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="container hero-content">
+      <div class="hero-badge">🚀 Открыта регистрация</div>
+      <h1>Digital Future<br /><span>2026</span></h1>
+      <p class="hero-sub">Хакатон нового поколения — где рождаются технологии завтрашнего дня</p>
+      <p class="hero-meta">
+        <strong>14–16 ноября 2026</strong> &nbsp;·&nbsp; <strong>Online + Алматы</strong>
+      </p>
+      <div class="hero-cta">
+        <a href="#registration" class="btn btn-primary">Зарегистрироваться</a>
+        <a href="#about" class="btn btn-outline">Узнать больше</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="container">
+      <div class="about-grid">
+        <div class="about-text">
+          <span class="tag">О мероприятии</span>
+          <h2>Три дня.<br />Три трека.<br />Один хакатон.</h2>
+          <p>Digital Future 2026 — это интенсивное соревнование для разработчиков, дизайнеров и инженеров, которые хотят решать реальные задачи технологического мира.</p>
+          <p>За 48 часов команды разрабатывают прототипы, получают фидбэк от менторов индустрии и борются за призовой фонд. Формат подходит и для опытных специалистов, и для студентов с горящими глазами.</p>
+          <a href="#registration" class="btn btn-primary" style="margin-top:.5rem">Присоединиться</a>
+        </div>
+        <div class="about-stats">
+          <div class="stat-card"><div class="num">48h</div><div class="label">Интенсив</div></div>
+          <div class="stat-card"><div class="num">300+</div><div class="label">Участников</div></div>
+          <div class="stat-card"><div class="num">3</div><div class="label">Трека</div></div>
+          <div class="stat-card"><div class="num">₸1M</div><div class="label">Призовой фонд</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRACKS -->
+  <section id="tracks">
+    <div class="container">
+      <div class="tracks-header">
+        <span class="tag">Направления</span>
+        <h2>Выбери свой трек</h2>
+        <p>Три направления — выбери то, что ближе всего к твоим навыкам и целям</p>
+      </div>
+      <div class="tracks-grid">
+        <article class="track-card">
+          <div class="track-icon">💻</div>
+          <h3>Программирование</h3>
+          <p>Web и мобильная разработка. Создавай продукты, которыми пользуются миллионы людей каждый день.</p>
+          <span class="track-tag">Web / Mobile</span>
+        </article>
+        <article class="track-card">
+          <div class="track-icon">🌐</div>
+          <h3>Сетевые технологии</h3>
+          <p>Инфраструктура, облака и DevOps. Строй надёжные системы, которые работают без сбоев под любой нагрузкой.</p>
+          <span class="track-tag">Infrastructure / DevOps</span>
+        </article>
+        <article class="track-card">
+          <div class="track-icon">🤖</div>
+          <h3>Искусственный интеллект</h3>
+          <p>Машинное обучение и нейросети. Применяй AI для решения реальных задач бизнеса и общества.</p>
+          <span class="track-tag">AI / ML</span>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- REGISTRATION -->
+  <section id="registration">
+    <div class="container">
+      <div class="reg-wrap">
+        <div class="reg-info">
+          <span class="tag">Регистрация</span>
+          <h2>Готов принять вызов?</h2>
+          <p>Заполни форму — и ты в игре. Регистрация открыта до 10 ноября 2026.</p>
+          <ul class="reg-steps">
+            <li>
+              <span class="step-num">1</span>
+              <span>Заполни форму и выбери направление</span>
+            </li>
+            <li>
+              <span class="step-num">2</span>
+              <span>Получи подтверждение на email</span>
+            </li>
+            <li>
+              <span class="step-num">3</span>
+              <span>Собери команду или присоединись к существующей</span>
+            </li>
+            <li>
+              <span class="step-num">4</span>
+              <span>Приходи и создавай будущее</span>
+            </li>
+          </ul>
+        </div>
+        <div class="form-card">
+          <h3>Форма участника</h3>
+          <div class="form-row">
+            <div class="field">
+              <label for="fname">Имя</label>
+              <input type="text" id="fname" name="fname" placeholder="Сабина" />
+            </div>
+            <div class="field">
+              <label for="lname">Фамилия</label>
+              <input type="text" id="lname" name="lname" placeholder="Иванова" />
+            </div>
+          </div>
+          <div class="field">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="you@example.com" />
+          </div>
+          <div class="field">
+            <label for="track">Направление</label>
+            <select id="track" name="track">
+              <option value="" disabled selected>Выбери трек</option>
+              <option value="web">Программирование (Web/Mobile)</option>
+              <option value="devops">Сетевые технологии (Infrastructure/DevOps)</option>
+              <option value="ai">Искусственный интеллект (AI/ML)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="github">GitHub-профиль</label>
+            <input type="url" id="github" name="github" placeholder="https://github.com/username" />
+          </div>
+          <button class="submit-btn" type="button">Принять участие 🚀</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <span class="logo">⚡ Digital Future</span>
+          <p>Ежегодный технологический хакатон для студентов и молодых специалистов Казахстана.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Навигация</h4>
+          <a href="#about">О событии</a>
+          <a href="#tracks">Направления</a>
+          <a href="#registration">Регистрация</a>
+        </div>
+        <div class="footer-col">
+          <h4>Контакты</h4>
+          <a href="mailto:hello@digitalfuture.kz">hello@digitalfuture.kz</a>
+          <a href="tel:+77001234567">+7 700 123-45-67</a>
+          <a href="#">Алматы, Казахстан</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 Digital Future Hackathon. Все права защищены.</p>
+        <div class="socials">
+          <a href="#" aria-label="GitHub">GH</a>
+          <a href="#" aria-label="Telegram">TG</a>
+          <a href="#" aria-label="Instagram">IG</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
